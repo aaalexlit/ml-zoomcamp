@@ -2,3 +2,5 @@
 /models
 /**/mlruns
 /preprocessor
+/scripts
+/output
