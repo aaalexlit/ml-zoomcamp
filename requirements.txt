@@ -6,3 +6,4 @@ mlflow==2.3.2
 hyperopt==0.2.7
 xgboost==1.7.5
 optuna==3.1.1
+wandb==0.15.3

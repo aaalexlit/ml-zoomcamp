@@ -2,5 +2,6 @@
 /models
 /**/mlruns
 /preprocessor
-/scripts
+/scripts*
 /output
+/wandb
