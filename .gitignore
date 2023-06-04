@@ -5,3 +5,5 @@
 /scripts*
 /output
 /wandb
+/artifacts
+regressor.pkl
