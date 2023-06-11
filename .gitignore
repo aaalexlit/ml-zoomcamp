@@ -9,3 +9,5 @@
 regressor.pkl
 mlflow.db
 .vscode
+
+__pycache__/
