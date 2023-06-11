@@ -7,3 +7,5 @@
 /wandb
 /artifacts
 regressor.pkl
+mlflow.db
+.vscode
