@@ -96,3 +96,18 @@ To apply the changes from the file run
 ```bash
 prefect deploy --all
 ```
+
+## Run a Deployment from CLI
+
+```bash
+prefect deployment run main-training-pipeline/taxi-s3-data
+```
+
+# Sheduling a deployment
+
+1. Through the UI
+1. On CLI  
+eg setting it every 2 minutes
+    ```bash
+    prefect deployment set-schedule main-training-pipeline/taxi-s3-data --interval 120
+    ```
