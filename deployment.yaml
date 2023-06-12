@@ -1,13 +1,13 @@
 deployments:
-- name: null
-  version: null
-  tags: []
-  description: null
-  schedule: {}
-  flow_name: null
-  entrypoint: null
-  parameters: {}
+- name: taxi-local-data
+  entrypoint: prefect/flows/orchestrate.py:main_flow
   work_pool:
-    name: null
-    work_queue_name: null
-    job_variables: {}
+    name: mlops-zoomcamp-pool
+- name: taxi-s3-data
+  entrypoint: prefect/flows/orchestrate_s3.py:main_training_pipeline
+  work_pool:
+    name: mlops-zoomcamp-pool
+- name: load-to-s3
+  entrypoint: prefect/flows/load_data_to_s3.py:web_to_s3
+  work_pool:
+    name: mlops-zoomcamp-pool

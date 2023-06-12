@@ -88,3 +88,11 @@ python prefect/flows/load_data_to_s3.py
 ```bash
 prefect deploy prefect/flows/orchestrate_s3.py:main_training_pipeline -n predict-from-s3 -p mlops-zoomcamp-pool
 ```
+
+# Create deploys using [`deployment.yaml`](../deployment.yaml)
+
+To apply the changes from the file run 
+
+```bash
+prefect deploy --all
+```
