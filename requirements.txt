@@ -11,3 +11,4 @@ black==23.3.0
 prefect==2.10.8
 prefect-aws==0.3.1
 orjson==3.8.1
+python-dotenv==1.0.0

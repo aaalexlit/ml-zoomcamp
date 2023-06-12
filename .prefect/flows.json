@@ -1,3 +1,4 @@
 {
-  "main-flow": "prefect/flows/orchestrate.py:main_flow"
+  "main-flow": "prefect/flows/orchestrate.py:main_flow",
+  "web-to-s3": "prefect/flows/load_data_to_s3.py:web_to_s3"
 }
