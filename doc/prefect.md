@@ -65,7 +65,7 @@ So we need to put data to S3 for instance not to keep in on github
 ## Create s3 bucket block
 
 Can be done with the code or through UI
-Done with the code [here](../prefect/infra/create_s3_bucket_block.py)
+Done with the code in [create_s3_bucket_block.py](../prefect/infra/create_s3_bucket_block.py)
 
 ```bash
 python prefect/infra/create_s3_bucket_block.py
@@ -82,3 +82,9 @@ python prefect/flows/load_data_to_s3.py
  ```bash
  prefect deploy prefect/flows/load_data_to_s3.py:web_to_s3 -n load-data-to-s3 -p mlops-zoomcamp-pool
  ```
+
+ ## Create a new flow to work with S3 and deploy it
+
+```bash
+prefect deploy prefect/flows/orchestrate_s3.py:main_training_pipeline -n predict-from-s3 -p mlops-zoomcamp-pool
+```
