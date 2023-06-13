@@ -64,6 +64,15 @@ What’s the final RMSE to five decimal places?
 - 8.89443
 - 9.12250
 
+## Q3. Answer 
+
+Instead of local not to commit data to the repo I'm working with S3
+
+To upload taxi data to S3 there's a flow [load_data_to_s3.py](/prefect/flows/load_data_to_s3.py) registered as deployment. At this instance I run it with "Custom run" changing the parameters to 2023 months 1 and 2.
+
+And then creating a custom flow run from the deployment for prediction using data from S3 as it's suggested in the question definition
+
+The last log output is `[99]	validation-rmse:5.19931`
 
 ## Q4. RMSE (Markdown Artifact)
 
