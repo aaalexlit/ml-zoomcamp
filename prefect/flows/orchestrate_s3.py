@@ -127,9 +127,7 @@ def train_best_model(
             key="duration-model-report", markdown=markdown__rmse_report
         )
 
-        notify_training_finished(rmse)
-
-    return None
+    return rmse
 
 
 @task
@@ -167,7 +165,9 @@ def main_training_pipeline(
     X_train, X_val, y_train, y_val, dv = add_features(df_train, df_val)
 
     # Train
-    train_best_model(X_train, X_val, y_train, y_val, dv)
+    rmse = train_best_model(X_train, X_val, y_train, y_val, dv)
+
+    notify_training_finished(rmse)
 
 
 if __name__ == "__main__":
