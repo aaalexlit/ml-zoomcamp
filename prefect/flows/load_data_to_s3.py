@@ -9,10 +9,13 @@ from prefect_aws import S3Bucket
 @task(retries=3, cache_key_fn=task_input_hash, cache_expiration=timedelta(days=30))
 def download_locally(base_url: str, file_name: str) -> Path:
     """Download files locally to then upload them to S3"""
-    filepath = Path(f"data/{file_name}")
+    dir_path = Path('data')
+    filepath = Path(f'data/{file_name}')
     if not filepath.exists():
         url = base_url + file_name
         response = requests.get(url, timeout=100)
+        if not dir_path.exists():
+            dir_path.mkdir()
         with filepath.open('wb') as f:
             f.write(response.content)
     return filepath
