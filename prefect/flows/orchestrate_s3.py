@@ -1,20 +1,21 @@
-import mlflow
 import pathlib
 import pickle
+from datetime import date
+
 import pandas as pd
 import numpy as np
 import scipy
 import sklearn
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.metrics import mean_squared_error
+import mlflow
 import xgboost as xgb
 from prefect import flow, task
 from prefect_aws import S3Bucket
 from prefect.artifacts import create_markdown_artifact
-from datetime import date
 
 
-@task(retries=3, retry_delay_seconds=2)
+@task(retries=3, retry_delay_seconds=2, name='Read taxi data')
 def read_data(filename: str) -> pd.DataFrame:
     """Read data into DataFrame"""
     df = pd.read_parquet(filename)
@@ -29,7 +30,7 @@ def read_data(filename: str) -> pd.DataFrame:
     return df
 
 
-@task
+@task(cache_key_fn=task_input_hash, cache_expiration=timedelta(days=30))
 def add_features(df_train: pd.DataFrame, df_val: pd.DataFrame) -> tuple(
     [
         scipy.sparse._csr.csr_matrix,
