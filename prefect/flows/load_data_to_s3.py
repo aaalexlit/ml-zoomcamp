@@ -6,16 +6,18 @@ from prefect.tasks import task_input_hash
 from prefect_aws import S3Bucket
 
 
-@task(retries=3, cache_key_fn=task_input_hash, cache_expiration=timedelta(days=30))
+@task(retries=3, cache_key_fn=task_input_hash, cache_expiration=timedelta(days=30), log_prints=True)
 def download_locally(base_url: str, file_name: str) -> Path:
     """Download files locally to then upload them to S3"""
     dir_path = Path('data')
     filepath = Path(f'data/{file_name}')
+    print(f'resolved dir path: {dir_path.resolve()}')
     if not filepath.exists():
         url = base_url + file_name
         response = requests.get(url, timeout=100)
         if not dir_path.exists():
             dir_path.mkdir()
+            print(f'dir data exists = {dir_path.exists()}')
         with filepath.open('wb') as f:
             f.write(response.content)
     return filepath
