@@ -37,6 +37,11 @@ What’s the cron schedule for that?
 - `9 * 3 0 *`
 - `* * 9 3 0`
 
+## Q2. Answer 
+
+`0 9 3 * *`
+
+![0 9 3 * *](cron_schedule.png)
 
 ## Q3. RMSE 
 
