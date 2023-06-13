@@ -14,6 +14,8 @@ from prefect import flow, task
 from prefect_aws import S3Bucket
 from prefect.artifacts import create_markdown_artifact
 from prefect.tasks import task_input_hash
+import prefect_email
+from prefect_email import EmailServerCredentials
 
 
 @task(retries=3, retry_delay_seconds=2, name='Read taxi data')
@@ -124,6 +126,12 @@ def train_best_model(
         create_markdown_artifact(
             key="duration-model-report", markdown=markdown__rmse_report
         )
+
+        email_credentials_block = EmailServerCredentials.load("gmail-creds")
+        prefect_email.email_send_message('Training finished successfully',
+                                         f'With final RMSE: {rmse:.2f}',
+                                         email_credentials_block,
+                                         email_to='aaalex.lit@gmail.com')
 
     return None
 
