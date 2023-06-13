@@ -64,7 +64,7 @@ def add_features(df_train: pd.DataFrame, df_val: pd.DataFrame) -> tuple(
     return X_train, X_val, y_train, y_val, dv
 
 
-@task(log_prints=True)
+@task(cache_key_fn=task_input_hash, cache_expiration=timedelta(days=30), log_prints=True)
 def train_best_model(
     X_train: scipy.sparse._csr.csr_matrix,
     X_val: scipy.sparse._csr.csr_matrix,
