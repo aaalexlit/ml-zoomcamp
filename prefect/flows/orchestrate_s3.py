@@ -1,6 +1,6 @@
 import pathlib
 import pickle
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 import numpy as np
@@ -13,6 +13,7 @@ import xgboost as xgb
 from prefect import flow, task
 from prefect_aws import S3Bucket
 from prefect.artifacts import create_markdown_artifact
+from prefect.tasks import task_input_hash
 
 
 @task(retries=3, retry_delay_seconds=2, name='Read taxi data')
