@@ -13,7 +13,7 @@ def download_locally(base_url: str, file_name: str) -> Path:
     if not filepath.exists():
         url = base_url + file_name
         response = requests.get(url, timeout=100)
-        with open(filepath, 'wb') as f:
+        with open(filepath.absolute(), 'wb') as f:
             f.write(response.content)
     return filepath
 
