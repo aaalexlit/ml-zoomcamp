@@ -130,7 +130,7 @@ def train_best_model(
     return rmse
 
 
-@task
+@flow
 def notify_training_finished(rmse):
     """Send email notification with the final RMSE"""
     email_credentials_block = EmailServerCredentials.load(
