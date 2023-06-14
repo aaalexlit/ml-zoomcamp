@@ -89,7 +89,7 @@ python prefect/flows/load_data_to_s3.py
 prefect deploy prefect/flows/orchestrate_s3.py:main_training_pipeline -n predict-from-s3 -p mlops-zoomcamp-pool
 ```
 
-# Create deploys using [`deployment.yaml`](../deployment.yaml)
+# Create deployments using [`deployment.yaml`](../deployment.yaml)
 
 To apply the changes from the file run 
 
@@ -111,3 +111,45 @@ eg setting it every 2 minutes
     ```bash
     prefect deployment set-schedule main-training-pipeline/taxi-s3-data --interval 120
     ```
+
+# Using prefect cloud
+
+## Create a new profile to use with the cloud and use it
+
+```bash
+prefect profile create cloud
+prefect profile use cloud
+```
+
+## Log in to prefect cloud either though browser or using the API key
+```bash
+prefect cloud login
+```
+
+## Add blocks (that were created programmatically)
+```bash
+python prefect/infra/create_s3_bucket_block.py
+```
+And an email block
+```bash
+python prefect/infra/create_email_server_creds.py
+```
+
+## Create work pool from CLI
+With the same name as a local one to be able to seamlessly transfer all the deployments
+
+```bash
+prefect work-pool create --type process mlops-zoomcamp-pool
+```
+
+### Add all the deployments
+
+```bash
+prefect deploy --all
+```
+
+### Before running a deployment start a worker that pulls work from the 'mlops-zoomcamp-pool' work pool
+
+```bash
+prefect worker start -p mlops-zoomcamp-pool 
+```

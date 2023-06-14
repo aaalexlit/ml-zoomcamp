@@ -133,7 +133,9 @@ What is the name of the pre-built prefect-email task function?
 - `send_email`
 - `send_message`
 
+## Q5. Answer
 
+`email_send_message`
 
 ## Q6. Prefect Cloud
 
@@ -158,16 +160,6 @@ What is the name of the second step in the Automation creation process?
 - Actions
 - The end
 
+## Q5. Answer
 
-## Submit the results
-
-* Submit your results here: https://forms.gle/nVSYH5fGGamdY1LaA
-* You can submit your solution multiple times. In this case, only the last submission will be used
-* If your answer doesn't match options exactly, select the closest one
-
-
-## Deadline
-
-The deadline for submitting is 12 June (Monday), 23:00 CEST (Berlin time). 
-
-After that, the form will be closed.
+Actions
