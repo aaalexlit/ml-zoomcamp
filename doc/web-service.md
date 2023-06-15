@@ -31,6 +31,9 @@ gunicorn --bind=0.0.0.0:9696 predict:app
 # To test the served model
 
 Execute [test.py](../web-service/test.py)
+```bash
+python test.py
+```
 
 it requires `requests` library to be installed. 
 It can be either installed in the same pipenv as a dev requirement like this
@@ -39,3 +42,23 @@ pipenv install --dev requests
 ```
 
 or the main project conda environtent that already has this dependency can be used.
+
+# Serve with Docker 
+
+## Build the docker image using the [Dockerfile](../web-service/Dockerfile)
+
+```bash
+docker build -t ride-duration-prediction-service:v1 .
+```
+
+## Run the image
+
+```bash
+docker run -it --rm -p 9696:9696 ride-duration-prediction-service:v1
+```
+
+And to test we can run the same 
+
+```bash
+python test.py
+```
