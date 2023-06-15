@@ -130,7 +130,8 @@ prefect cloud login
 ```bash
 python prefect/infra/create_s3_bucket_block.py
 ```
-And an email block
+And an email block with [create_email_server_creds.py](../prefect/infra/create_email_server_creds.py)
+
 ```bash
 python prefect/infra/create_email_server_creds.py
 ```
