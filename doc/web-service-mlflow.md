@@ -23,3 +23,22 @@ And then withing the notebook set the AWS_PROFILE env var
 ```python
 os.environ["AWS_PROFILE"] = "default"
 ```
+
+To launch [predict.py](../web-service-mlflow/predict.py) first we need to start local mlflow server from [wweb-service-mlflow](../web-service-mlflow/) folder
+
+```bash
+mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root s3://mlopszoomcamp-alex
+```
+
+Then we also need to install 2 more dependencies in the pipenv and activate the environment
+```bash
+pipenv install mlflow
+pipenv install boto3
+pipenv shell
+```
+
+Then we can run the Flask App and test it
+```bash
+python predict.py
+python test.py
+```
