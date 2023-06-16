@@ -4,12 +4,15 @@ import mlflow
 from flask import Flask, request, jsonify
 
 RUN_ID = 'a4b217a84e3a44ad870271b75331eb6c'
-MLFLOW_TRACKING_URI = 'http://127.0.0.1:5000'
+# MLFLOW_TRACKING_URI = 'http://127.0.0.1:5000'
 
-mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+# mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+
+# path = mlflow.artifacts.download_artifacts(
+#     run_id=RUN_ID, artifact_path='model/model.pkl')
 
 path = mlflow.artifacts.download_artifacts(
-    run_id=RUN_ID, artifact_path='model/model.pkl')
+    artifact_uri=f"s3://mlopszoomcamp-alex/1/{RUN_ID}/artifacts/model/model.pkl")
 
 with open(path, 'rb') as f_out:
     pipeline = pickle.load(f_out)
