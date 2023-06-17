@@ -138,7 +138,7 @@ def notify_training_finished(rmse):
     email_send_message('Training finished successfully',
                        f'With final RMSE: {rmse:.2f}',
                        email_credentials_block,
-                       email_to='aaalex.lit@gmail.com')
+                       email_to=email_credentials_block.username)
 
 
 @flow
