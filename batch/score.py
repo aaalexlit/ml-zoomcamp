@@ -3,14 +3,13 @@ import os
 import uuid
 import sys
 from pathlib import Path
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import pandas as pd
 import mlflow
-
-from sklearn.feature_extraction import DictVectorizer
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn.pipeline import make_pipeline
+from prefect import flow, task
+from prefect.context import get_run_context
 
 os.environ["AWS_PROFILE"] = "default"
 
@@ -52,7 +51,7 @@ def apply_model(input_file: str, output_file: str, run_id: str) -> None:
     df = read_dataframe(input_file)
 
     dicts = prepare_dictionaries(df)
-    
+
     print(f'reading the data with RUN_ID={run_id}...')
     pipeline = download_pipeline(run_id)
     print('applying the model...')
@@ -75,17 +74,35 @@ def apply_model(input_file: str, output_file: str, run_id: str) -> None:
     df_result.to_parquet(output_file, index=False)
 
 
-def run():
-    taxi_type = sys.argv[1]  # 'green'
-    year = int(sys.argv[2])  # 2021
-    month = int(sys.argv[3])  # 3
+@flow
+def ride_duration_prediction(
+    taxi_type: str,
+    run_id: str,
+    run_date: datetime = None):
+    if run_date is None:
+        ctx = get_run_context()
+        run_date = ctx.flow_run.expected_start_time
+    prev_month = run_date - relativedelta(months=1)
+
+    year = prev_month.year
+    month = prev_month.month
 
     input_file = f'https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet'
     output_file = f'output/{taxi_type}/{year:04d}-{month:02d}.parquet'
 
     RUN_ID = 'a4b217a84e3a44ad870271b75331eb6c'
-    # RUN_ID = sys.argv[4]
     apply_model(input_file, output_file, RUN_ID)
+
+def run():
+    taxi_type = sys.argv[1]  # 'green'
+    year = int(sys.argv[2])  # 2021
+    month = int(sys.argv[3])  # 3
+    RUN_ID = 'a4b217a84e3a44ad870271b75331eb6c'
+    # RUN_ID = sys.argv[4]
+
+    ride_duration_prediction(taxi_type=taxi_type,
+    run_id=RUN_ID,
+    run_date=datetime(year=year, month=month, day=1))
 
 
 if __name__ == '__main__':
