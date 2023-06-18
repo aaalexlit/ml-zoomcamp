@@ -44,7 +44,7 @@ def prepare_dictionaries(df: pd.DataFrame):
     dicts = df[categorical + numerical].to_dict(orient='records')
     return dicts
 
-
+@task(log_prints=True)
 def apply_model(input_file: str, output_file: str, run_id: str) -> None:
     print(f'reading the data from the {input_file}...')
 
@@ -69,7 +69,7 @@ def apply_model(input_file: str, output_file: str, run_id: str) -> None:
 
     df_result['model_version'] = run_id
 
-    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
+    # Path(output_file).parent.mkdir(parents=True, exist_ok=True)
 
     df_result.to_parquet(output_file, index=False)
 
@@ -88,7 +88,7 @@ def ride_duration_prediction(
     month = prev_month.month
 
     input_file = f'https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet'
-    output_file = f'output/{taxi_type}/{year:04d}-{month:02d}.parquet'
+    output_file = f's3://mlopszoomcamp-alex/output/{taxi_type}/{year:04d}-{month:02d}-{run_id}.parquet'
 
     RUN_ID = 'a4b217a84e3a44ad870271b75331eb6c'
     apply_model(input_file, output_file, RUN_ID)
