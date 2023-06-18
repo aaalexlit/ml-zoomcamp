@@ -1,6 +1,7 @@
 import pickle
 import os
 import uuid
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -13,14 +14,6 @@ from sklearn.pipeline import make_pipeline
 
 os.environ["AWS_PROFILE"] = "default"
 
-year = 2021
-month = 3
-taxi_type = 'green'
-input_file = f'https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet'
-output_file = f'output/{taxi_type}/{year:04d}-{month:02d}.parquet'
-
-RUN_ID = 'a4b217a84e3a44ad870271b75331eb6c'
-
 
 def download_pipeline(run_id: str):
     path = mlflow.artifacts.download_artifacts(
@@ -29,8 +22,6 @@ def download_pipeline(run_id: str):
     with open(path, 'rb') as f_out:
         pipeline = pickle.load(f_out)
     return pipeline
-
-
 
 
 def read_dataframe(filename: str):
@@ -55,33 +46,47 @@ def prepare_dictionaries(df: pd.DataFrame):
     return dicts
 
 
-
-
 def apply_model(input_file: str, output_file: str, run_id: str) -> None:
+    print(f'reading the data from the {input_file}...')
+
     df = read_dataframe(input_file)
 
     dicts = prepare_dictionaries(df)
+    
+    print(f'reading the data with RUN_ID={run_id}...')
     pipeline = download_pipeline(run_id)
+    print('applying the model...')
     y_pred = pipeline.predict(dicts)
 
+    print(f'saving the results to {output_file}...')
     df_result = pd.DataFrame()
     df_result[['ride_id', 'lpep_pickup_datetime', 'PULocationID', 'DOLocationID']
-            ] = df[['ride_id', 'lpep_pickup_datetime', 'PULocationID', 'DOLocationID']]
+              ] = df[['ride_id', 'lpep_pickup_datetime', 'PULocationID', 'DOLocationID']]
     df_result['actual_duration'] = df['duration']
     df_result['predicted_duration'] = y_pred
 
-    df_result['diff'] = df_result['actual_duration'] - df_result['predicted_duration'] 
+    df_result['diff'] = df_result['actual_duration'] - \
+        df_result['predicted_duration']
 
     df_result['model_version'] = run_id
 
     Path(output_file).parent.mkdir(parents=True, exist_ok=True)
-    
+
     df_result.to_parquet(output_file, index=False)
 
-apply_model(input_file, output_file, RUN_ID)
+
+def run():
+    taxi_type = sys.argv[1]  # 'green'
+    year = int(sys.argv[2])  # 2021
+    month = int(sys.argv[3])  # 3
+
+    input_file = f'https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet'
+    output_file = f'output/{taxi_type}/{year:04d}-{month:02d}.parquet'
+
+    RUN_ID = 'a4b217a84e3a44ad870271b75331eb6c'
+    # RUN_ID = sys.argv[4]
+    apply_model(input_file, output_file, RUN_ID)
 
 
-
-
-
-
+if __name__ == '__main__':
+    run()
