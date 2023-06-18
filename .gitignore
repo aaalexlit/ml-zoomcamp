@@ -3,7 +3,7 @@
 /**/mlruns
 /preprocessor
 /scripts*
-/output
+**/output
 /wandb
 /artifacts
 regressor.pkl
