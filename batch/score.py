@@ -30,7 +30,7 @@ def read_dataframe(filename: str):
     df.duration = df.duration.dt.total_seconds() / 60
     df = df[(df.duration >= 1) & (df.duration <= 60)]
 
-    df['ride_id'] = [str(uuid.uuid4()) for i in range(len(df))]
+    df['ride_id'] = [str(uuid.uuid4()) for _ in range(len(df))]
 
     return df
 
@@ -41,8 +41,7 @@ def prepare_dictionaries(df: pd.DataFrame):
     df['PU_DO'] = df['PULocationID'] + '_' + df['DOLocationID']
     categorical = ['PU_DO']
     numerical = ['trip_distance']
-    dicts = df[categorical + numerical].to_dict(orient='records')
-    return dicts
+    return df[categorical + numerical].to_dict(orient='records')
 
 
 def save_results(df, y_pred, run_id, output_file):
@@ -67,7 +66,7 @@ def apply_model(input_file: str, output_file: str, run_id: str) -> None:
     df = read_dataframe(input_file)
     dicts = prepare_dictionaries(df)
 
-    logger.info(f'reading the data with RUN_ID={run_id}...')
+    logger.info(f'loading pipeline with RUN_ID={run_id}...')
     pipeline = download_pipeline(run_id)
     logger.info('applying the model...')
     y_pred = pipeline.predict(dicts)
