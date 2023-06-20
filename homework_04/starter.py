@@ -1,7 +1,10 @@
 import pickle
+import sys
 from pathlib import Path
 import pandas as pd
+import numpy as np
 
+categorical = ["PULocationID", "DOLocationID"]
 
 def load_model():
     with open("model.bin", "rb") as f_in:
@@ -9,7 +12,7 @@ def load_model():
     return dv, model
 
 
-def read_data(filename):
+def read_data(filename, year, month):
     df = pd.read_parquet(filename)
 
     df["ride_id"] = f"{year:04d}/{month:02d}_" + df.index.astype("str")
@@ -36,14 +39,13 @@ def save_results(df, y_pred, output_file):
 
 
 def prepare_features(df, dv):
-    categorical = ["PULocationID", "DOLocationID"]
     dicts = df[categorical].to_dict(orient="records")
     return dv.transform(dicts)
 
 
-def apply_model(input_file: str, output_file: str) -> None:
+def apply_model(input_file: str, output_file: str, year: int, month: int) -> None:
     print(f'reading the data from the {input_file}...')
-    df = read_data(input_file)
+    df = read_data(input_file, year, month)
 
     print('loading the model...')
     dv, model = load_model()
@@ -51,12 +53,14 @@ def apply_model(input_file: str, output_file: str) -> None:
     features = prepare_features(df, dv)
     y_pred = model.predict(features)
 
+    print(np.mean(y_pred))
+
     print(f'saving the results to {output_file}...')
     save_results(df, y_pred, output_file)
     return output_file
 
 
-def get_paths(year, month, taxi_type) -> tuple(str):
+def get_paths(year, month, taxi_type) -> tuple[str, str]:
     input_file = f"https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
     output_file = f"../data/predicted_duration_{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
     return input_file, output_file
@@ -67,7 +71,7 @@ def ride_duration_prediction(taxi_type: str, year: int, month: int):
                                         month=month,
                                         taxi_type=taxi_type)
 
-    apply_model(input_file, output_file)
+    apply_model(input_file, output_file, year, month)
 
 
 def run():
