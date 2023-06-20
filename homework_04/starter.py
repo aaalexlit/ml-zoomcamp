@@ -1,70 +1,81 @@
 import pickle
+from pathlib import Path
 import pandas as pd
 
 
-get_ipython().system('wget -nc https://github.com/DataTalksClub/mlops-zoomcamp/raw/main/cohorts/2023/04-deployment/homework/model.bin')
+def load_model():
+    with open("model.bin", "rb") as f_in:
+        dv, model = pickle.load(f_in)
+    return dv, model
 
-
-with open('model.bin', 'rb') as f_in:
-    dv, model = pickle.load(f_in)
-
-
-categorical = ['PULocationID', 'DOLocationID']
 
 def read_data(filename):
     df = pd.read_parquet(filename)
-    
-    df['duration'] = df.tpep_dropoff_datetime - df.tpep_pickup_datetime
-    df['duration'] = df.duration.dt.total_seconds() / 60
+
+    df["ride_id"] = f"{year:04d}/{month:02d}_" + df.index.astype("str")
+
+    df["duration"] = df.tpep_dropoff_datetime - df.tpep_pickup_datetime
+    df["duration"] = df.duration.dt.total_seconds() / 60
 
     df = df[(df.duration >= 1) & (df.duration <= 60)].copy()
 
-    df[categorical] = df[categorical].fillna(-1).astype('int').astype('str')
-    
+    df[categorical] = df[categorical].fillna(-1).astype("int").astype("str")
+
     return df
 
 
-year = 2022
-month = 2
-taxi_type = 'yellow'
-df = read_data(f'https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet')
-df['ride_id'] = f'{year:04d}/{month:02d}_' + df.index.astype('str')
+def save_results(df, y_pred, output_file):
+    df_result = pd.DataFrame()
+    df_result["ride_id"] = df["ride_id"]
+    df_result["predicted_duration"] = y_pred
+
+    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
+
+    df_result.to_parquet(output_file, engine="pyarrow",
+                         compression=None, index=False)
 
 
-
-dicts = df[categorical].to_dict(orient='records')
-X_val = dv.transform(dicts)
-y_pred = model.predict(X_val)
-
-
-
-round(y_pred.std(), 2)
+def prepare_features(df, dv):
+    categorical = ["PULocationID", "DOLocationID"]
+    dicts = df[categorical].to_dict(orient="records")
+    return dv.transform(dicts)
 
 
-df_result = pd.DataFrame()
-df_result['ride_id'] = df['ride_id']
-df_result['predicted_duration'] = y_pred
+def apply_model(input_file: str, output_file: str) -> None:
+    print(f'reading the data from the {input_file}...')
+    df = read_data(input_file)
+
+    print('loading the model...')
+    dv, model = load_model()
+    print('applying the model...')
+    features = prepare_features(df, dv)
+    y_pred = model.predict(features)
+
+    print(f'saving the results to {output_file}...')
+    save_results(df, y_pred, output_file)
+    return output_file
 
 
+def get_paths(year, month, taxi_type) -> tuple(str):
+    input_file = f"https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
+    output_file = f"../data/predicted_duration_{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
+    return input_file, output_file
 
 
-output_file = f'../data/predicted_duration_{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet'
+def ride_duration_prediction(taxi_type: str, year: int, month: int):
+    input_file, output_file = get_paths(year=year,
+                                        month=month,
+                                        taxi_type=taxi_type)
+
+    apply_model(input_file, output_file)
 
 
-
-df_result.to_parquet(
-    output_file,
-    engine='pyarrow',
-    compression=None,
-    index=False
-)
+def run():
+    taxi_type = sys.argv[1]  # 'yellow'
+    year = int(sys.argv[2])  # 2022
+    month = int(sys.argv[3])  # 3
+    ride_duration_prediction(taxi_type, year, month)
 
 
-
-get_ipython().system('ls -lh ../data/{output_file}')
-
-
-
-
-
-
+if __name__ == "__main__":
+    run()
