@@ -6,10 +6,10 @@ with open('lin_reg.bin', 'rb') as f_in:
 
 
 def prepare_features(ride):
-    features = {}
-    features['PU_DO'] = f"{ride['PULocationID']}_{ride['DOLocationID']}"
-    features['trip_distance'] = ride['trip_distance']
-    return features
+    return {
+        'PU_DO': f"{ride['PULocationID']}_{ride['DOLocationID']}",
+        'trip_distance': ride['trip_distance'],
+    }
 
 
 def predict(features):
