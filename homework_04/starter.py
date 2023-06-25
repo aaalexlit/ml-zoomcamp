@@ -1,10 +1,13 @@
 import pickle
 import sys
+import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
 
 categorical = ["PULocationID", "DOLocationID"]
+os.environ["AWS_PROFILE"] = "default"
+
 
 def load_model():
     with open("model.bin", "rb") as f_in:
@@ -32,7 +35,8 @@ def save_results(df, y_pred, output_file):
     df_result["ride_id"] = df["ride_id"]
     df_result["predicted_duration"] = y_pred
 
-    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
+    if not output_file.startswith("s3"):
+        Path(output_file).parent.mkdir(parents=True, exist_ok=True)
 
     df_result.to_parquet(output_file, engine="pyarrow",
                          compression=None, index=False)
@@ -62,7 +66,8 @@ def apply_model(input_file: str, output_file: str, year: int, month: int) -> Non
 
 def get_paths(year, month, taxi_type) -> tuple[str, str]:
     input_file = f"https://d37ci6vzurychx.cloudfront.net/trip-data/{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
-    output_file = f"../data/predicted_duration_{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
+    # output_file = f"../data/predicted_duration_{taxi_type}_tripdata_{year:04d}-{month:02d}.parquet"
+    output_file = f's3://mlopszoomcamp-alex/output/{taxi_type}/predicted_duration_{year:04d}-{month:02d}.parquet'
     return input_file, output_file
 
 
