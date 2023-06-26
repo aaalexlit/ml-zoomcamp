@@ -16,7 +16,7 @@ pipenv install scikit-learn==1.2.2 pyarrow pandas --python=3.9
 pipenv run python starter.py yellow  2022 3
 ```
 
-## Build and run from docker
+## Build and run from docker with s3 upload
 
 ```bash
 docker build -t aaalexlit/zoomcampl-model:v1 .
