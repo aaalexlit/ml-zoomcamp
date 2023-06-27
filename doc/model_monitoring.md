@@ -31,3 +31,19 @@
 The idea is to create the monitoring system on top of the logs. 
 
 This way it doesn't matter the mode the underlying model is deployed cause we can always work on the logs in batch mode.
+
+---
+
+# Practice
+
+1. Install additional libs `evidently` and `psycopg` (that are added to [requirements.txt](../requirements.txt)) in the existing environment 
+
+1. First we run [baseline_model_nyc_taxi_data.ipynb](../monitoring/baseline_model_nyc_taxi_data.ipynb) to download the data and train and save the model
+
+1. Spin up grafana and co by running
+    ```bash
+    docker compose up
+    ```
+1. Run [dummy_metrics_calculation.py](../monitoring/dummy_metrics_calculation.py) to see how dummy metrics to check out grafana interface
+
+1. Run [evidently_metrics_calculation.py](../monitoring/evidently_metrics_calculation.py) to fill the dashboard with real metrics
