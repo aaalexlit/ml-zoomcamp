@@ -47,3 +47,11 @@ This way it doesn't matter the mode the underlying model is deployed cause we ca
 1. Run [dummy_metrics_calculation.py](../monitoring/dummy_metrics_calculation.py) to see how dummy metrics to check out grafana interface
 
 1. Run [evidently_metrics_calculation.py](../monitoring/evidently_metrics_calculation.py) to fill the dashboard with real metrics
+
+
+To save model's json between docker runs do the following:
+
+1. Create a dashboard 
+2. Go to Dashboard settings
+3. Go to JSON model tab
+4. Copy json and save it in a file in the /dashboards directory eg in [../monitoring/dashboards/)](../monitoring/dashboards/) that will then be picked up be the grafana configuration described in [grafana_dashboards.yaml](../monitoring/config/grafana_dashboards.yaml)
