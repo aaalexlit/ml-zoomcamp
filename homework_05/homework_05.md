@@ -1,5 +1,22 @@
 ## Homework
 
+To manually inspect the report run and get the answer to Q1 run the [baseline_model_nyc_taxi_data.ipynb](baseline_model_nyc_taxi_data.ipynb)
+
+Copy the `lin_reg.bin` model into [models/](./models/) directory
+
+Then spin up postgres+grafana stack by running
+```shell
+docker compose up
+```
+
+and run the [evidently_metrics_calculation.py](evidently_metrics_calculation.py) script by
+
+```shell
+python evidently_metrics_calculation.py
+```
+
+---
+
 The goal of this homework is to familiarize users with monitoring for ML batch services, using PostgreSQL database to store metrics and Grafana to visualize them.
 
 
@@ -11,9 +28,6 @@ Start with `baseline_model_nyc_taxi_data.ipynb`. Download the March 2023 Green T
 What is the shape of the downloaded data? How many rows are there?
 
 * 72044
-* 78537 
-* 62495
-* 54396
 
 
 ## Q2. Metric
@@ -24,6 +38,7 @@ Hint: explore evidently metric `ColumnQuantileMetric` (`from evidently.metrics i
 
 What metric did you choose?
 
+`ColumnCorrelationsMetric`
 
 
 ## Q3. Prefect flow 
@@ -34,9 +49,6 @@ Hint: use `evidently_metrics_calculation.py` script as a starting point to imple
 
 What is the correct way of doing that?
 
-* `@task(retries_num=2, retry_seconds=5, task_name="calculate metrics")`
-* `@task(retries_num=2, retry_delay_seconds=5, name="calculate metrics")`
-* `@task(retries=2, retry_seconds=5, task_name="calculate metrics")`
 * `@task(retries=2, retry_delay_seconds=5, name="calculate metrics")`
 
 
@@ -47,11 +59,9 @@ Let’s start monitoring. Run expanded monitoring for a new batch of data (March
 
 What is the maximum value of metric `quantile = 0.5` on th `"fare_amount"` column during March 2023 (calculated daily)?
 
-* 10
-* 12.5
 * 14
-* 14.8
 
+![Fare amount median](image.png)
 
 ## Q5. Dashboard
 
@@ -60,21 +70,4 @@ Finally, let’s add panels with new added metrics to the dashboard. After we cu
 
 Where to place a dashboard config file?
 
-* `project_folder` (05-monitoring)
-* `project_folder/config`  (05-monitoring/config)
 * `project_folder/dashboards`  (05-monitoring/dashboards)
-* `project_folder/data`  (05-monitoring/data)
-
-
-## Submit the results
-
-* Submit your results here: https://forms.gle/PJaYeWsnWShAEBF79
-* You can submit your solution multiple times. In this case, only the last submission will be used
-* If your answer doesn't match options exactly, select the closest one
-
-
-## Deadline
-
-The deadline for submitting is 7 July (Friday), 23:00 CEST (Berlin time). 
-
-After that, the form will be closed.
