@@ -1,3 +1,7 @@
+Helpful tutorial:
+https://sagarthacker.com/posts/mlops/aws-deployment-lambda-kinesis.html
+
+
 The (artificial) idea is that the model is doing better predictions when the ride has already starter and that's why we want to implement it as a stream
 
 1. Provide `AmazonKinesisAnalyticsFullAccess` to IAM user in any way (attach directly, create a group etc)
@@ -15,7 +19,7 @@ Event that gets sent to the queue
                 "kinesisSchemaVersion": "1.0",
                 "partitionKey": "1",
                 "sequenceNumber": "49641801370286448471783931287578672283018518126072430594",
-                "data": "Hellothisisatest",
+                "data": "eyAgICAgICAgInJpZGUiOiB7CiAgICAgICAgICAgICJQVUxvY2F0aW9uSUQiOiAxMzAsCiAgICAgICAgICAgICJET0xvY2F0aW9uSUQiOiAyMDUsCiAgICAgICAgICAgICJ0cmlwX2Rpc3RhbmNlIjogMy42NgogICAgICAgIH0sCiAgICAgICAgInJpZGVfaWQiOiAxNTYKICAgIH0=",
                 "approximateArrivalTimestamp": 1687007422.736
             },
             "eventSource": "aws:kinesis",
@@ -95,3 +99,35 @@ echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
     ```
 
 1. Test using [test_docker.py](test_docker.py)
+
+1. Create a repo in AWS ECR
+
+    ```shell
+    aws ecr create-repository --repository-name duration-model
+    ```
+
+1. Log into ECR with docker
+    ```
+    aws ecr get-login-password | docker login --username AWS --password-stdin 740446032364.dkr.ecr.us-west-2.amazonaws.com
+    ```
+
+1. Push the image
+    ```
+    REMOTE_URI="740446032364.dkr.ecr.us-west-2.amazonaws.com/duration-model"
+    REMOTE_TAG="v1"
+    REMOTE_IMAGE=${REMOTE_URI}:${REMOTE_TAG}
+
+    LOCAL_IMAGE="stream-model-duration:v1"
+    docker tag ${LOCAL_IMAGE} ${REMOTE_IMAGE}
+    docker push ${REMOTE_IMAGE}
+    ```
+
+1. Create new Lambda from a container image attaching the role that permits to write to kinesis stream.
+
+1. Set its env vars
+
+1. Add Kinesis trigger with start-ride-event stream
+
+1. Add s3 access permissions to the role that executes lambda
+
+1. Increase Lambda's memory to 512 and timeout to 15 secs
