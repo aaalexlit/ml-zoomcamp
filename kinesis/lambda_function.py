@@ -1,5 +1,11 @@
 import json
+import boto3
 import base64
+import os
+
+PREDICTIONS_STREAM_NAME = os.getenv(
+    'PREDICTIONS_STREAM_NAME', 'ride-predictions')
+kinesis_client = boto3.client('kinesis')
 
 
 def prepare_features(ride):
@@ -16,7 +22,6 @@ def predict(features):
 def lambda_handler(event, context):
     print(json.dumps(event))
 
-
     predictions = []
     for record in event['Records']:
         encoded_data = record['kinesis']['data']
@@ -30,12 +35,19 @@ def lambda_handler(event, context):
         features = prepare_features(ride)
         prediction = predict(features)
         prediction_event = {
-                    'model': 'ride_duration_prediction_model',
-                    'version': '123',
-                    'ride_duration': prediction,
-                    'ride_id': ride_id
-                }
+            'model': 'ride_duration_prediction_model',
+            'version': '123',
+            'prediction': {
+                'ride_duration': prediction,
+                'ride_id': ride_id
+            }
+        }
+
+        response = kinesis_client.put_record(
+            StreamName=PREDICTIONS_STREAM_NAME,
+            Data=json.dumps(prediction_event),
+            PartitionKey='1',
+        )
         predictions.append(prediction_event)
 
     return predictions
-

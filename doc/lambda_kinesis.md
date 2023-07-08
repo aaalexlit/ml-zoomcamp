@@ -30,9 +30,10 @@ Event that gets sent to the queue
 }
 ```
 
-To put an event to the kinesis queue
+To put an event to the kinesis stream using aws CLI
 
 ```bash
+KINESIS_STREAM_INPUT=start-ride-events
 aws kinesis put-record \
     --stream-name ${KINESIS_STREAM_INPUT} \
     --partition-key 1 \
@@ -44,3 +45,24 @@ aws kinesis put-record \
         "ride_id": 156
     }'  --cli-binary-format raw-in-base64-out
 ```
+
+Read from stream using AWS CLI
+(for that permissions need to be added)
+
+```bash
+KINESIS_STREAM_OUTPUT=ride-predictions
+SHARD='shardId-000000000000'
+
+SHARD_ITERATOR=$(aws kinesis \
+    get-shard-iterator \
+        --shard-id ${SHARD} \
+        --shard-iterator-type TRIM_HORIZON \
+        --stream-name ${KINESIS_STREAM_OUTPUT} \
+        --query 'ShardIterator' \
+)
+
+RESULT=$(aws kinesis get-records --shard-iterator $SHARD_ITERATOR)
+
+echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
+```
+
