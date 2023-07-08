@@ -66,3 +66,32 @@ RESULT=$(aws kinesis get-records --shard-iterator $SHARD_ITERATOR)
 echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
 ```
 
+# Dockerize lambda
+
+1. Create pipenv to use inside the docker image
+    ```shell
+    pipenv install boto3 mlflow scikit-learn==1.2.2 --python=3.9
+    ```
+
+    To package lambda into a docker we need to use AWS-provided base image that contains all the required components to run your functions packaged as container images on AWS Lambda
+
+    Python ones can be found here
+    https://gallery.ecr.aws/lambda/python
+
+
+1. Build docker image from the [Dockerfile](Dockerfile)
+    ```shell
+    docker build -t stream-model-duration:v1 .
+    ```
+
+1. Run Docker image
+    ```shell
+    docker run -it --rm \
+    -p 8080:8080 \
+    -e PREDICTIONS_STREAM_NAME="ride-predictions" \
+    -e RUN_ID="a4b217a84e3a44ad870271b75331eb6c" \
+    -v ~/.aws:/root/.aws \
+    stream-model-duration:v1
+    ```
+
+1. Test using [test_docker.py](test_docker.py)

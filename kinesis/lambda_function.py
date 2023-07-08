@@ -2,11 +2,21 @@ import json
 import boto3
 import base64
 import os
+import pickle
+
+import mlflow
 
 PREDICTIONS_STREAM_NAME = os.getenv(
     'PREDICTIONS_STREAM_NAME', 'ride-predictions')
 kinesis_client = boto3.client('kinesis')
 
+RUN_ID = os.getenv('RUN_ID', 'a4b217a84e3a44ad870271b75331eb6c')
+
+path = mlflow.artifacts.download_artifacts(
+    artifact_uri=f"s3://mlopszoomcamp-alex/1/{RUN_ID}/artifacts/model/model.pkl")
+
+with open(path, 'rb') as f_out:
+    pipeline = pickle.load(f_out)
 
 def prepare_features(ride):
     features = {}
@@ -16,11 +26,11 @@ def prepare_features(ride):
 
 
 def predict(features):
-    return 10.0
+    return pipeline.predict(features)[0]
 
 
 def lambda_handler(event, context):
-    print(json.dumps(event))
+    # print(json.dumps(event))
 
     predictions = []
     for record in event['Records']:
@@ -30,7 +40,7 @@ def lambda_handler(event, context):
         ride = ride_event['ride']
         ride_id = ride_event['ride_id']
 
-        print(f'ride_id = {ride_id}')
+        # print(f'ride_id = {ride_id}')
 
         features = prepare_features(ride)
         prediction = predict(features)
