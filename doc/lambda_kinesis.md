@@ -1,3 +1,9 @@
+The (artificial) idea is that the model is doing better predictions when the ride has already starter and that's why we want to implement it as a stream
+
+1. Provide `AmazonKinesisAnalyticsFullAccess` to IAM user in any way (attach directly, create a group etc)
+1. Create Lambda
+When streams are used it's essential to provide ids to be able to idendify events cause one can't rely on the sequence of events.
+
 
 Event that gets sent to the queue
 
