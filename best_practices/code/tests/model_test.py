@@ -1,5 +1,4 @@
-import lambda_function
-
+import model
 
 def test_prepare_features():
     ride = {
@@ -8,7 +7,9 @@ def test_prepare_features():
         "trip_distance": 3.66
     }
 
-    actual_features = lambda_function.prepare_features(ride)
+    model_service = model.ModelService(None, None, True)
+
+    actual_features = model_service.prepare_features(ride)
 
     expected_features = {
         'PU_DO': '130_205',
