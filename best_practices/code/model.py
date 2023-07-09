@@ -15,6 +15,9 @@ def load_pipeline(run_id: str):
     with open(path, 'rb') as f_out:
         return pickle.load(f_out)
 
+def base64_decode(encoded_data):
+    decoded_data = base64.b64decode(encoded_data).decode('utf-8')
+    return json.loads(decoded_data)
 
 class ModelService:
 
@@ -36,8 +39,7 @@ class ModelService:
         predictions = []
         for record in event['Records']:
             encoded_data = record['kinesis']['data']
-            decoded_data = base64.b64decode(encoded_data).decode('utf-8')
-            ride_event = json.loads(decoded_data)
+            ride_event = base64_decode(encoded_data)
             ride = ride_event['ride']
             ride_id = ride_event['ride_id']
 
