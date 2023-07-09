@@ -1,9 +1,9 @@
 import json
-import boto3
-import base64
 import os
 import pickle
+import base64
 
+import boto3
 import mlflow
 
 PREDICTIONS_STREAM_NAME = os.getenv(
@@ -19,10 +19,10 @@ with open(path, 'rb') as f_out:
     pipeline = pickle.load(f_out)
 
 def prepare_features(ride):
-    features = {}
-    features['PU_DO'] = f"{ride['PULocationID']}_{ride['DOLocationID']}"
-    features['trip_distance'] = ride['trip_distance']
-    return features
+    return {
+        'PU_DO': f"{ride['PULocationID']}_{ride['DOLocationID']}",
+        'trip_distance': ride['trip_distance'],
+    }
 
 
 def predict(features):
@@ -53,7 +53,7 @@ def lambda_handler(event, context):
             }
         }
 
-        response = kinesis_client.put_record(
+        kinesis_client.put_record(
             StreamName=PREDICTIONS_STREAM_NAME,
             Data=json.dumps(prediction_event),
             PartitionKey='1',
