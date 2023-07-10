@@ -43,3 +43,8 @@
     -v ~/.aws:/root/.aws \
     stream-model-duration:v2    
     ```
+
+1. Run tests from CLI
+
+    ```shell
+    pipenv run pytest tests/

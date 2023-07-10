@@ -15,16 +15,22 @@ def load_pipeline(run_id: str):
     with open(path, 'rb') as f_out:
         return pickle.load(f_out)
 
+
 def base64_decode(encoded_data):
     decoded_data = base64.b64decode(encoded_data).decode('utf-8')
     return json.loads(decoded_data)
 
+
 class ModelService:
 
-    def __init__(self, pipeline, prediction_stream_name, test_run):
+    def __init__(self, pipeline,
+                 model_version=None,
+                 prediction_stream_name=None,
+                 test_run=None):
         self.pipeline = pipeline
         self.prediction_stream_name = prediction_stream_name
         self.test_run = test_run
+        self.model_version = model_version
 
     def prepare_features(self, ride):
         return {
@@ -47,7 +53,7 @@ class ModelService:
             prediction = self.predict(features)
             prediction_event = {
                 'model': 'ride_duration_prediction_model',
-                'version': '123',
+                'version': self.model_version,
                 'prediction': {
                     'ride_duration': prediction,
                     'ride_id': ride_id
@@ -66,7 +72,8 @@ class ModelService:
 def init(prediction_stream_name: str, run_id: str, test_run: bool):
     pipeline = load_pipeline(run_id)
     return ModelService(
-        pipeline=pipeline, 
-        prediction_stream_name=prediction_stream_name, 
+        pipeline=pipeline,
+        model_version=run_id,
+        prediction_stream_name=prediction_stream_name,
         test_run=test_run
     )

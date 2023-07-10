@@ -24,10 +24,10 @@ event = {
 }
 
 
-def test():
+def test_end_to_end():
     response = requests.post(url=URL, json=event)
     print(response.json())
 
 
 if __name__ == '__main__':
-    test()
+    test_end_to_end()
