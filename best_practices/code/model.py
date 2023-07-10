@@ -25,12 +25,10 @@ class ModelService:
 
     def __init__(self, pipeline,
                  model_version=None,
-                 prediction_stream_name=None,
-                 test_run=None):
+                 callbacks=None):
         self.pipeline = pipeline
-        self.prediction_stream_name = prediction_stream_name
-        self.test_run = test_run
         self.model_version = model_version
+        self.callbacks = callbacks or []
 
     def prepare_features(self, ride):
         return {
@@ -59,12 +57,16 @@ class ModelService:
                     'ride_id': ride_id
                 }
             }
-            if not self.test_run:
-                kinesis_client.put_record(
-                    StreamName=self.prediction_stream_name,
-                    Data=json.dumps(prediction_event),
-                    PartitionKey='1',
-                )
+
+            for callback in self.callbacks:
+                callback(prediction_event)
+
+            # if not self.test_run:
+            #     kinesis_client.put_record(
+            #         StreamName=self.prediction_stream_name,
+            #         Data=json.dumps(prediction_event),
+            #         PartitionKey='1',
+            #     )
             predictions.append(prediction_event)
         return predictions
 

@@ -38,7 +38,7 @@ def test_prepare_features():
 def test_predict():
     expected_prediction = 10.0
     model_mock = ModelMock(expected_prediction)
-    model_service = model.ModelService(model_mock, None, None, None)
+    model_service = model.ModelService(model_mock)
 
     features = {
         'PU_DO': '130_205',
@@ -65,7 +65,6 @@ def test_lambda_handler():
     model_version = 'test123'
     model_service = model.ModelService(pipeline=model_mock,
                                        model_version=model_version,
-                                       test_run=True
                                        )
 
     event = {
