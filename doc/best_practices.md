@@ -61,3 +61,24 @@
     ```shell
     python test_docker.py
     ```
+
+### Run integration tests against the model downloaded from the s3 locally
+
+1. Copy files from s3 to [integraton-test/model/](../best_practices/code/integraton-test/model/) folder
+    ```shell
+    aws s3 cp --recursive s3://mlopszoomcamp-alex/1/a4b217a84e3a44ad870271b75331eb6c/artifacts/model .
+    ```
+
+1. Specify model path for in docker run and mount it as a volume
+
+    ```shell
+    docker run -it --rm \
+    -p 8080:8080 \
+    -e PREDICTIONS_STREAM_NAME="ride-predictions" \
+    -e RUN_ID="a4b217a84e3a44ad870271b75331eb6c" \
+    -e TEST_RUN="True" \
+    -e MODEL_LOCATION="/app/model/model.pkl" \
+    -v $(pwd)/integration-test/model:/app/model \
+    -v ~/.aws:/root/.aws \
+    stream-model-duration:v2 
+    ```
