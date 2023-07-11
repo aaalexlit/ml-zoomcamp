@@ -48,7 +48,7 @@
 
     ```shell
     pipenv run pytest tests/
-
+    ```
 
 1. install deepdiff (development) dependency
 
@@ -62,7 +62,7 @@
     python test_docker.py
     ```
 
-### Run integration tests against the model downloaded from the s3 locally
+## Run integration tests against the model downloaded from the s3 locally
 
 1. Copy files from s3 to [integraton-test/model/](../best_practices/code/integraton-test/model/) folder
     ```shell
@@ -82,3 +82,18 @@
     -v ~/.aws:/root/.aws \
     stream-model-duration:v2 
     ```
+
+## Automate the test using a shell script
+
+Create [run.sh](../best_practices/run.sh)
+
+Make it executable
+
+```shell
+chmod +x run.sh
+```
+
+Execute the sript from any directory eg from [best_practices/code/](../best_practices/code/)
+```shell
+./integration-test/run.sh
+```

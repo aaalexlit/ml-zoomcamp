@@ -1,0 +1,15 @@
+services:
+  lambda:
+    build: 
+      context: .
+    image: ${LOCAL_IMAGE_NAME}
+    environment:
+      - PREDICTIONS_STREAM_NAME=ride-predictions
+      - RUN_ID=a4b217a84e3a44ad870271b75331eb6c
+      - TEST_RUN=True
+      - MODEL_LOCATION=/app/model/model.pkl
+    volumes:
+      - ./integration-test/model:/app/model
+      - ~/.aws:/root/.aws
+    ports:
+      - 8080:8080
