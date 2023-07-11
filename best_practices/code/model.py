@@ -7,8 +7,6 @@ import boto3
 import mlflow
 
 
-# kinesis_client = boto3.client('kinesis')
-
 def load_pipeline(run_id: str):
     path = mlflow.artifacts.download_artifacts(
         artifact_uri=f"s3://mlopszoomcamp-alex/1/{run_id}/artifacts/model/model.pkl")
@@ -61,18 +59,34 @@ class ModelService:
             for callback in self.callbacks:
                 callback(prediction_event)
 
-            # if not self.test_run:
-            #     kinesis_client.put_record(
-            #         StreamName=self.prediction_stream_name,
-            #         Data=json.dumps(prediction_event),
-            #         PartitionKey='1',
-            #     )
             predictions.append(prediction_event)
         return predictions
 
 
+class KinesisCallback:
+
+    def __init__(self, kinesis_client, prediction_stream_name):
+        self.kinesis_client = kinesis_client
+        self.prediction_stream_name = prediction_stream_name
+
+    def put_record(self, prediction_event):
+        ride_id = prediction_event['prediction']['ride_id']
+        self.kinesis_client.put_record(
+            StreamName=self.prediction_stream_name,
+            Data=json.dumps(prediction_event),
+            PartitionKey='1',
+        )
+
+
 def init(prediction_stream_name: str, run_id: str, test_run: bool):
     pipeline = load_pipeline(run_id)
+
+    if not self.test_run:
+        kinesis_client = boto3.client('kinesis')
+        kinesis_callback = KinesisCallback(
+            kinesis_client, prediction_stream_name)
+        callbacks = [kinesis_callback.put_record]
+        
     return ModelService(
         pipeline=pipeline,
         model_version=run_id,
