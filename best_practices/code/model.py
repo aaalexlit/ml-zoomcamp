@@ -8,8 +8,10 @@ import mlflow
 
 
 def load_pipeline(run_id: str):
+    model_bucket = os.getenv('MODEL_BUCKET', 'mlopszoomcamp-alex')
+    experiment_id = os.getenv('MLFLOW_EXPERIMENT_ID', '1')
     path = mlflow.artifacts.download_artifacts(
-        artifact_uri=f"s3://mlopszoomcamp-alex/1/{run_id}/artifacts/model/model.pkl")
+        artifact_uri=f"s3://{model_bucket}/{experiment_id}/{run_id}/artifacts/model/model.pkl")
     with open(path, 'rb') as f_out:
         return pickle.load(f_out)
 
