@@ -56,7 +56,7 @@
     pipenv install --dev deepdiff
     ```
 
-1. run integration test from CLI (docker image needs to be running)
+1. run integration test from CLI (docker image needs to be running) [test_docker.py](../best_practices/code/integraton-test/test_docker.py)
 
     ```shell
     python test_docker.py

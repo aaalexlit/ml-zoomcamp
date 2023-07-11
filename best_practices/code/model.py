@@ -6,12 +6,23 @@ import base64
 import boto3
 import mlflow
 
+def get_model_uri(run_id):
+    model_location = os.getenv('MODEL_LOCATION')
 
-def load_pipeline(run_id: str):
+    if model_location is not None:
+        return model_location
+
     model_bucket = os.getenv('MODEL_BUCKET', 'mlopszoomcamp-alex')
     experiment_id = os.getenv('MLFLOW_EXPERIMENT_ID', '1')
+
+    model_location = f"s3://{model_bucket}/{experiment_id}/{run_id}/artifacts/model/model.pkl"
+    return model_location
+
+
+def load_pipeline(run_id: str):
+    model_uri = get_model_uri(run_id)
     path = mlflow.artifacts.download_artifacts(
-        artifact_uri=f"s3://{model_bucket}/{experiment_id}/{run_id}/artifacts/model/model.pkl")
+        artifact_uri=model_uri)
     with open(path, 'rb') as f_out:
         return pickle.load(f_out)
 
