@@ -7,6 +7,7 @@ COPY Pipfile* ./
 
 RUN pipenv install --system --deploy
 
-COPY *.py ./
+COPY lambda_function.py ./
+COPY model.py ./
 
 CMD [ "lambda_function.lambda_handler" ]

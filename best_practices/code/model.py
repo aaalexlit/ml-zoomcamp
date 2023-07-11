@@ -70,7 +70,6 @@ class KinesisCallback:
         self.prediction_stream_name = prediction_stream_name
 
     def put_record(self, prediction_event):
-        ride_id = prediction_event['prediction']['ride_id']
         self.kinesis_client.put_record(
             StreamName=self.prediction_stream_name,
             Data=json.dumps(prediction_event),
@@ -81,15 +80,15 @@ class KinesisCallback:
 def init(prediction_stream_name: str, run_id: str, test_run: bool):
     pipeline = load_pipeline(run_id)
 
-    if not self.test_run:
+    callbacks = []
+    if not test_run:
         kinesis_client = boto3.client('kinesis')
         kinesis_callback = KinesisCallback(
             kinesis_client, prediction_stream_name)
-        callbacks = [kinesis_callback.put_record]
-        
+        callbacks.append(kinesis_callback.put_record)
+
     return ModelService(
         pipeline=pipeline,
         model_version=run_id,
-        prediction_stream_name=prediction_stream_name,
-        test_run=test_run
+        callbacks=callbacks,
     )

@@ -1,4 +1,6 @@
 import requests
+import json
+from deepdiff import DeepDiff
 
 URL = 'http://localhost:8080/2015-03-31/functions/function/invocations'
 
@@ -26,7 +28,19 @@ event = {
 
 def test_end_to_end():
     response = requests.post(url=URL, json=event)
-    print(response.json())
+    actual_response = response.json()
+    print(f'actual resonse:\n{json.dumps(actual_response, indent=4)}')
+    expected_response = [{'model': 'ride_duration_prediction_model',
+                          'version': 'a4b217a84e3a44ad870271b75331eb6c',
+                          'prediction': {
+                              'ride_duration': 18.2,
+                              'ride_id': 156}}]
+    diff = DeepDiff(actual_response,
+                    expected_response,
+                    significant_digits=1)
+    print(f'diff:\n{diff}')
+    ## checks that diff is empty
+    assert not diff
 
 
 if __name__ == '__main__':

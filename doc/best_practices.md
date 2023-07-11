@@ -48,3 +48,10 @@
 
     ```shell
     pipenv run pytest tests/
+
+
+1. install deepdiff (development) dependency
+
+    ```shell
+    pipenv install --dev deepdiff
+    ```
