@@ -97,3 +97,32 @@ Execute the sript from any directory eg from [best_practices/code/](../best_prac
 ```shell
 ./integration-test/run.sh
 ```
+
+## Test kinesis with localstack using an image
+
+To test spinning up only kinesis part of docker-compose:
+```shell
+docker compose up kinesis
+```
+
+To list streams in kinesis in the AWS account
+```shell
+aws kinesis list-streams
+```
+
+To go to lockalstack instead
+
+```shell
+aws --endpoint-url=http://localhost:4566 kinesis list-streams 
+```
+
+Create kinesis stream `ride-predictions` on localstack
+
+```shell
+aws --endpoint-url=http://localhost:4566 \
+    kinesis create-stream \
+    --stream-name ride-predictions \
+    --shard-count 1
+```
+
+Now we need to configure the code to connect to http://localhost:4566 instead of trying to connect to AWS

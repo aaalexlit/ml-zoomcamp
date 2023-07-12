@@ -13,3 +13,9 @@ services:
       - ~/.aws:/root/.aws
     ports:
       - 8080:8080
+  kinesis:
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=kinesis
