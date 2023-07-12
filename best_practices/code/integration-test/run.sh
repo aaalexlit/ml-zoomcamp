@@ -25,10 +25,22 @@ ERROR_CODE=$?
 
 cd ..
 
-# if [ ${ERROR_CODE} != 0 ]; then
-#     docker-compose logs
-#     docker-compose down
-#     exit ${ERROR_CODE}
-# fi
+if [ ${ERROR_CODE} != 0 ]; then
+    docker-compose logs
+    docker-compose down
+    exit ${ERROR_CODE}
+fi
+\cd "$(dirname "$0")"
+pipenv run python test_kinesis.py
 
-# docker compose down
+ERROR_CODE=$?
+
+cd ..
+
+if [ ${ERROR_CODE} != 0 ]; then
+    docker-compose logs
+    docker-compose down
+    exit ${ERROR_CODE}
+fi
+
+docker compose down
