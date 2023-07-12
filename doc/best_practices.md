@@ -126,3 +126,30 @@ aws --endpoint-url=http://localhost:4566 \
 ```
 
 Now we need to configure the code to connect to http://localhost:4566 instead of trying to connect to AWS
+
+Add env var `- KINESIS_ENDPOINT_URL=http://kinesis:4566/`
+
+then run [run.sh](../best_practices/code/integration-test/run.sh)
+
+first comment the `docker compose down` part to be able to check the kinesis stream
+
+when it's done run the following
+
+```bash
+KINESIS_STREAM_OUTPUT=ride-predictions
+SHARD='shardId-000000000000'
+
+aws --endpoint-url=http://localhost:4566 \
+        kinesis get-shard-iterator \
+        --shard-id ${SHARD} \
+        --shard-iterator-type TRIM_HORIZON \
+        --stream-name ${KINESIS_STREAM_OUTPUT} \
+        --query 'ShardIterator' \
+
+aws --endpoint-url=http://localhost:4566 kinesis get-records --shard-iterator "AAAAAAAAAAFBGMKbwnfd9XFDEFzCKFZ+BZNTmSUr+V7VA6LNRueML8apWHxaNUzYJO1HiZDzD5TfNHTS15tu+SIPeH054ph8MJB3nwPeFf6z6rkySbH50U0a8T508siTDQhYvM+jBjnmcILxJRlD0QanT26Ezk9VBuX5CyjO97CkXlxepSV+fFvV3a9hhVsZrdMdy0EP0OfOy9gxiwoP+3Ek7ZeK52zN"
+
+echo "eyJtb2RlbCI6ICJya
+WRlX2R1cmF0aW9uX3ByZWRpY3Rpb25fbW9kZWwiLCAidmVyc2lvbiI6ICJhNGIyMTdhODRlM2E0NGFkODcwMjcxYjc1MzMxZWI2Yy
+IsICJwcmVkaWN0aW9uIjogeyJyaWRlX2R1cmF0aW9uIjogMTguMTY4OTQ1NzI2NDA1MzI2LCAicmlkZV9pZCI6IDE1Nn19" | base64 -d
+```
+

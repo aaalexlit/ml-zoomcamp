@@ -6,6 +6,7 @@ import base64
 import boto3
 import mlflow
 
+
 def get_model_uri(run_id):
     model_location = os.getenv('MODEL_LOCATION')
 
@@ -79,7 +80,7 @@ class ModelService:
 class KinesisCallback:
 
     def __init__(self, kinesis_client, prediction_stream_name):
-        self.kinesis_client = kinesis_client
+        self.kinesis_client = create_kinesis_client()
         self.prediction_stream_name = prediction_stream_name
 
     def put_record(self, prediction_event):
@@ -88,6 +89,14 @@ class KinesisCallback:
             Data=json.dumps(prediction_event),
             PartitionKey='1',
         )
+
+
+def create_kinesis_client():
+    if endpoint_url := os.getenv('KINESIS_ENDPOINT_URL'):
+        print(f'Local kinesis url specified: {endpoint_url}')
+        return boto3.client('kinesis', endpoint_url=endpoint_url)
+    else:
+        return boto3.client('kinesis')
 
 
 def init(prediction_stream_name: str, run_id: str, test_run: bool):
