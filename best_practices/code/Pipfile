@@ -12,6 +12,7 @@ scikit-learn = "==1.2.2"
 pytest = "*"
 deepdiff = "*"
 boto3 = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.9"

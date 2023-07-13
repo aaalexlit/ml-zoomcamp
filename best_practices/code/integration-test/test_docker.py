@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 from deepdiff import DeepDiff
 
 URL = 'http://localhost:8080/2015-03-31/functions/function/invocations'
@@ -27,6 +27,7 @@ event = {
 
 
 def test_end_to_end():
+    # pylint: disable=missing-function-docstring
     response = requests.post(url=URL, json=event)
     actual_response = response.json()
     print(f'actual resonse:\n{json.dumps(actual_response, indent=4)}')
