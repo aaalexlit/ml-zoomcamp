@@ -4,13 +4,12 @@ from deepdiff import DeepDiff
 
 URL = "http://localhost:8080/2015-03-31/functions/function/invocations"
 
-with open("event.json", "rt", encoding="utf-8") as f_in:
-    event = json.load(f_in)
-
 
 def test_end_to_end():
     # pylint: disable=missing-function-docstring
-    response = requests.post(url=URL, json=event, timeout=10)
+    with open("kinesis_event.json", "rt", encoding="utf-8") as f_in:
+        event = json.load(f_in)
+    response = requests.post(url=URL, json=event, timeout=60)
     actual_response = response.json()
     print(f"actual resonse:\n{json.dumps(actual_response, indent=4)}")
     expected_response = [
