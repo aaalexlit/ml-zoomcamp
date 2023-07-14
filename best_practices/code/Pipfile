@@ -13,6 +13,8 @@ pytest = "*"
 deepdiff = "*"
 boto3 = "*"
 pylint = "*"
+black = "*"
+isort = "*"
 
 [requires]
 python_version = "3.9"

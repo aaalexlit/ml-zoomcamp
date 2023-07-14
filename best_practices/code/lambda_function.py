@@ -3,17 +3,19 @@ import os
 import model
 
 PREDICTIONS_STREAM_NAME = os.getenv(
-    'PREDICTIONS_STREAM_NAME', 'ride-predictions')
+    'PREDICTIONS_STREAM_NAME', 'ride-predictions'
+)
 
 # RUN_ID = os.getenv('RUN_ID', 'a4b217a84e3a44ad870271b75331eb6c')
 RUN_ID = os.getenv('RUN_ID')
 
 TEST_RUN = os.getenv('TEST_RUN', 'False') == 'True'
 
-model_service = model.init(prediction_stream_name=PREDICTIONS_STREAM_NAME,
-                           run_id=RUN_ID,
-                           test_run=TEST_RUN
-                           )
+model_service = model.init(
+    prediction_stream_name=PREDICTIONS_STREAM_NAME,
+    run_id=RUN_ID,
+    test_run=TEST_RUN,
+)
 
 
 def lambda_handler(event, context):

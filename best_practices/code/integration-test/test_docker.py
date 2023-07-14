@@ -2,9 +2,9 @@ import json
 import requests
 from deepdiff import DeepDiff
 
-URL = 'http://localhost:8080/2015-03-31/functions/function/invocations'
+URL = "http://localhost:8080/2015-03-31/functions/function/invocations"
 
-with open('event.json', 'rt', encoding='utf-8') as f_in:
+with open("event.json", "rt", encoding="utf-8") as f_in:
     event = json.load(f_in)
 
 
@@ -12,19 +12,19 @@ def test_end_to_end():
     # pylint: disable=missing-function-docstring
     response = requests.post(url=URL, json=event, timeout=10)
     actual_response = response.json()
-    print(f'actual resonse:\n{json.dumps(actual_response, indent=4)}')
-    expected_response = [{'model': 'ride_duration_prediction_model',
-                          'version': 'a4b217a84e3a44ad870271b75331eb6c',
-                          'prediction': {
-                              'ride_duration': 18.2,
-                              'ride_id': 156}}]
-    diff = DeepDiff(actual_response,
-                    expected_response,
-                    significant_digits=1)
-    print(f'diff:\n{diff}')
+    print(f"actual resonse:\n{json.dumps(actual_response, indent=4)}")
+    expected_response = [
+        {
+            "model": "ride_duration_prediction_model",
+            "version": "a4b217a84e3a44ad870271b75331eb6c",
+            "prediction": {"ride_duration": 18.2, "ride_id": 156},
+        }
+    ]
+    diff = DeepDiff(actual_response, expected_response, significant_digits=1)
+    print(f"diff:\n{diff}")
     # checks that diff is empty
     assert not diff
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_end_to_end()

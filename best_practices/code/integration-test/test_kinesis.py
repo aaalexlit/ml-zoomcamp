@@ -10,7 +10,8 @@ from deepdiff import DeepDiff
 
 def kinesis_test():
     kinesis_endpoint = os.getenv(
-        'KINESIS_ENDPOINT_URL', "http://localhost:4566")
+        'KINESIS_ENDPOINT_URL', "http://localhost:4566"
+    )
     kinesis_client = boto3.client('kinesis', endpoint_url=kinesis_endpoint)
 
     stream_name = os.getenv('PREDICTIONS_STREAM_NAME', 'ride-predictions')

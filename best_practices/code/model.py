@@ -66,7 +66,7 @@ class ModelService:
                 'version': self.model_version,
                 'prediction': {
                     'ride_duration': prediction,
-                    'ride_id': ride_id
+                    'ride_id': ride_id,
                 }
             }
 
