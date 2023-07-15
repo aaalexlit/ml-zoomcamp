@@ -1,0 +1,17 @@
+services:
+  lambda:
+    build: 
+      context: .
+    image: ${LOCAL_IMAGE_NAME}
+    env_file: .env  
+    volumes:
+      - ./integration-test/model:/app/model
+      - ~/.aws:/root/.aws
+    ports:
+      - 8080:8080
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=s3
