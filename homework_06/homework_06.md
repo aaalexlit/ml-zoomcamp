@@ -8,3 +8,9 @@ pipenv install
 ```shell
 pipenv run python batch.py 2022 2
 ```
+
+1. install pytest
+
+```shell
+pipenv install --dev pytest
+```
