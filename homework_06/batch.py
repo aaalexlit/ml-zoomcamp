@@ -68,6 +68,7 @@ def main(year: int, month: int):
     y_pred = lr.predict(X_val)
 
     print('predicted mean duration:', y_pred.mean())
+    print('sum of predicted durations:', y_pred.sum())
 
     save_data(df, y_pred, output_file)
 

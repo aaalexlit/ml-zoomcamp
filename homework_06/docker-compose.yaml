@@ -1,14 +1,18 @@
 services:
-  lambda:
+  batch:
     build: 
       context: .
     image: ${LOCAL_IMAGE_NAME}
     env_file: .env  
+    environment:
+      - S3_ENDPOINT_URL=http://localstack:4566/
     volumes:
-      - ./integration-test/model:/app/model
       - ~/.aws:/root/.aws
     ports:
       - 8080:8080
+    depends_on:
+      - localstack
+    command: 2022 1
   localstack:
     image: localstack/localstack
     ports:

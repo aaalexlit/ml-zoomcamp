@@ -62,3 +62,9 @@ export OUTPUT_FILE_PATTERN="s3://${S3_BUCKET_NAME}/out/{year:04d}-{month:02d}.pa
 ```
 
 ---
+
+Download file with expected prediction from localstack's S3
+
+```shell
+aws --endpoint-url=http://localhost:4566/ s3 cp s3://nyc-duration/out/2022-01.parquet ./integration-test/expected_prediction.parquet
+```
