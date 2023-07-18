@@ -1,7 +1,7 @@
-import json
 import os
-import pickle
+import json
 import base64
+import pickle
 
 import boto3
 import mlflow
@@ -22,8 +22,7 @@ def get_model_uri(run_id):
 
 def load_pipeline(run_id: str):
     model_uri = get_model_uri(run_id)
-    path = mlflow.artifacts.download_artifacts(
-        artifact_uri=model_uri)
+    path = mlflow.artifacts.download_artifacts(artifact_uri=model_uri)
     with open(path, 'rb') as f_out:
         return pickle.load(f_out)
 
@@ -34,10 +33,7 @@ def base64_decode(encoded_data):
 
 
 class ModelService:
-
-    def __init__(self, pipeline,
-                 model_version=None,
-                 callbacks=None):
+    def __init__(self, pipeline, model_version=None, callbacks=None):
         self.pipeline = pipeline
         self.model_version = model_version
         self.callbacks = callbacks or []
@@ -67,7 +63,7 @@ class ModelService:
                 'prediction': {
                     'ride_duration': prediction,
                     'ride_id': ride_id,
-                }
+                },
             }
 
             for callback in self.callbacks:
@@ -78,7 +74,6 @@ class ModelService:
 
 
 class KinesisCallback:
-
     def __init__(self, kinesis_client, prediction_stream_name):
         self.kinesis_client = kinesis_client
         self.prediction_stream_name = prediction_stream_name
@@ -105,7 +100,8 @@ def init(prediction_stream_name: str, run_id: str, test_run: bool):
     if not test_run:
         kinesis_client = create_kinesis_client()
         kinesis_callback = KinesisCallback(
-            kinesis_client, prediction_stream_name)
+            kinesis_client, prediction_stream_name
+        )
         callbacks.append(kinesis_callback.put_record)
 
     return ModelService(

@@ -1,6 +1,6 @@
 services:
   lambda:
-    build: 
+    build:
       context: .
     image: ${LOCAL_IMAGE_NAME}
     environment:

@@ -1,16 +1,26 @@
+from pathlib import Path
+
 import model
 
 
+def read_text(file):
+    test_directory = Path(__file__).parent
+
+    with open(test_directory / file, 'rt', encoding='utf-8') as f_in:
+        return f_in.read().strip()
+
+
 def test_base64_decode():
-    base64_input = 'eyAgICAgICAgInJpZGUiOiB7CiAgICAgICAgICAgICJQVUxvY2F0aW9uSUQiOiAxMzAsCiAgICAgICAgICAgICJET0xvY2F0aW9uSUQiOiAyMDUsCiAgICAgICAgICAgICJ0cmlwX2Rpc3RhbmNlIjogMy42NgogICAgICAgIH0sCiAgICAgICAgInJpZGVfaWQiOiAxNTYKICAgIH0='
+    base64_input = read_text('data.b64')
 
     actual_output = model.base64_decode(base64_input)
-    expected_output = {"ride": {
-        "PULocationID": 130,
-        "DOLocationID": 205,
-        "trip_distance": 3.66
-    },
-        "ride_id": 156
+    expected_output = {
+        "ride": {
+            "PULocationID": 130,
+            "DOLocationID": 205,
+            "trip_distance": 3.66,
+        },
+        "ride_id": 156,
     }
 
     assert expected_output == actual_output
@@ -20,7 +30,7 @@ def test_prepare_features():
     ride = {
         "PULocationID": 130,
         "DOLocationID": 205,
-        "trip_distance": 3.66
+        "trip_distance": 3.66,
     }
 
     model_service = model.ModelService(None, None, True)
@@ -63,15 +73,18 @@ def test_lambda_handler():
     prediction = 10.0
     model_mock = ModelMock(prediction)
     model_version = 'test123'
-    model_service = model.ModelService(pipeline=model_mock,
-                                       model_version=model_version,
-                                       )
+    model_service = model.ModelService(
+        pipeline=model_mock,
+        model_version=model_version,
+    )
+
+    base64_input = read_text('data.b64')
 
     event = {
         "Records": [
             {
                 "kinesis": {
-                    "data": "eyAgICAgICAgInJpZGUiOiB7CiAgICAgICAgICAgICJQVUxvY2F0aW9uSUQiOiAxMzAsCiAgICAgICAgICAgICJET0xvY2F0aW9uSUQiOiAyMDUsCiAgICAgICAgICAgICJ0cmlwX2Rpc3RhbmNlIjogMy42NgogICAgICAgIH0sCiAgICAgICAgInJpZGVfaWQiOiAxNTYKICAgIH0=",
+                    "data": base64_input,
                 },
             }
         ]
@@ -79,13 +92,12 @@ def test_lambda_handler():
 
     actual_predictions = model_service.lambda_handler(event)
 
-    expected_predictions = [{
-        'model': 'ride_duration_prediction_model',
-        'version': model_version,
-        'prediction': {
-            'ride_duration': prediction,
-            'ride_id': 156
+    expected_predictions = [
+        {
+            'model': 'ride_duration_prediction_model',
+            'version': model_version,
+            'prediction': {'ride_duration': prediction, 'ride_id': 156},
         }
-    }]
+    ]
 
     assert expected_predictions == actual_predictions
