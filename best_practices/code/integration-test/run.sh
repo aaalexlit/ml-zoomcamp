@@ -4,7 +4,7 @@
 cd "$(dirname "$0")"
 
 # give a unique tag to the docker image
-LOCAL_TAG=`date +"%Y-%m-%d-%H-%M"`
+LOCAL_TAG=$(date +"%Y-%m-%d-%H-%M")
 export LOCAL_IMAGE_NAME="stream-model-duration:${LOCAL_TAG}"
 export PREDICTIONS_STREAM_NAME="ride-predictions"
 
