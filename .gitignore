@@ -10,6 +10,7 @@ regressor.pkl
 mlflow.db
 .vscode
 .idea 
+.terraform
 
 __pycache__/
 **/.pytest_cache

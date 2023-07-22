@@ -126,7 +126,7 @@ echo ${RESULT} | jq -r '.Records[0].Data' | base64 --decode | jq
 
 1. Set its env vars
 
-1. Add Kinesis trigger with start-ride-event stream
+1. Add Kinesis trigger with start-ride-events stream
 
 1. Add s3 access permissions to the role that executes lambda
 
