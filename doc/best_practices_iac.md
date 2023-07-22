@@ -23,3 +23,8 @@ terraform plan
 ```
 
 It will ask to provide a value for producer stream name which in this case is `start-ride-events`
+
+Lambda depends on the image in the ECR repository. So we need to build and push it first.
+Also, it depends on the s3 bucket with the model in the runtime. So it needs to be created first.
+
+In practice, the Image build-and-push step is handled by CI/CD pipeline and not the IaC script.
