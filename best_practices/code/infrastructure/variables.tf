@@ -15,3 +15,7 @@ variable "producer_kinesis_stream_name" {
 variable "consumer_kinesis_stream_name" {
   description = "Kinesis consumer stream name"
 }
+
+variable "model_bucket_name" {
+  description = "Name of the S3 bucket to store models"
+}
