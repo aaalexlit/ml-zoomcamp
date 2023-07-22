@@ -11,3 +11,7 @@ variable "producer_kinesis_stream_name" {
   description = "Kinesis producer stream name"
 }
   
+
+variable "consumer_kinesis_stream_name" {
+  description = "Kinesis consumer stream name"
+}
