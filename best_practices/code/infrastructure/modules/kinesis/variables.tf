@@ -17,7 +17,7 @@ variable "shard_level_metrics" {
   type        = list(string)
   description = "List of shard-level metrics to enable"
   default = [
-    "IncomintBytes",
+    "IncomingBytes",
     "OutgoingBytes",
     "OutgoingRecords",
     "WriteProvisionedThroughputExceeded",

@@ -21,7 +21,7 @@ data "aws_caller_identity" "current" {}
 locals {
   account_id = data.aws_caller_identity.current.account_id
 }
-# start-ride-events 
+# start-ride-events
 module "producer_kinesis_stream" {
   source = "./modules/kinesis"
   stream_name = "${var.producer_kinesis_stream_name}-${var.project_id}"
@@ -30,7 +30,7 @@ module "producer_kinesis_stream" {
   tags = var.project_id
 }
 
-# ride-predictions 
+# ride-predictions
 module "consumer_kinesis_stream" {
   source = "./modules/kinesis"
   stream_name = "${var.consumer_kinesis_stream_name}-${var.project_id}"
