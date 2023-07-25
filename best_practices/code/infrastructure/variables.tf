@@ -32,3 +32,6 @@ variable "docker_image_local_path" {
   description = "Path to the docker image"
 }
   
+variable "lambda_function_name" {
+  description = "value of the lambda function name"
+}
