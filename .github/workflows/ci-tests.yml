@@ -40,7 +40,7 @@ jobs:
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       - name: Integration Test
-        working-directory: ./best-practices/code/integraton-test
+        working-directory: ./best-practices/code/integration-test
         run: |
           . run.sh
 
