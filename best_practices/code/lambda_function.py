@@ -27,9 +27,10 @@ model_service = model.init(
 
 def lambda_handler(event, context):
     # pylint: disable=unused-argument
+    # pylint: disable=broad-exception-caught
     try:
         return model_service.lambda_handler(event)
-    except Exception as exc:
+    except Exception:
         exception_type, exception_value, exception_traceback = sys.exc_info()
         traceback_string = traceback.format_exception(
             exception_type, exception_value, exception_traceback
@@ -42,3 +43,4 @@ def lambda_handler(event, context):
             }
         )
         logger.error(err_msg)
+    return None
