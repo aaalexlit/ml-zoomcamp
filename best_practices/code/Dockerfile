@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.9
+FROM public.ecr.aws/lambda/python:3.9-arm64
 
 RUN pip install -U pip
 RUN pip install pipenv
