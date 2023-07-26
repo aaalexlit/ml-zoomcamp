@@ -2,9 +2,13 @@ import os
 import json
 import base64
 import pickle
+import logging
 
 import boto3
 import mlflow
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def get_model_uri(run_id):
@@ -49,9 +53,11 @@ class ModelService:
 
     def lambda_handler(self, event):
         predictions = []
+        logger.info('kinesis_event: %s', event)
         for record in event['Records']:
             encoded_data = record['kinesis']['data']
             ride_event = base64_decode(encoded_data)
+            logger.info('ride_event: %s', ride_event)
             ride = ride_event['ride']
             ride_id = ride_event['ride_id']
 

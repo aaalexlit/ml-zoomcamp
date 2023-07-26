@@ -1,6 +1,13 @@
 import os
+import sys
+import json
+import logging
+import traceback
 
 import model
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 PREDICTIONS_STREAM_NAME = os.getenv(
     'PREDICTIONS_STREAM_NAME', 'ride-predictions'
@@ -20,4 +27,18 @@ model_service = model.init(
 
 def lambda_handler(event, context):
     # pylint: disable=unused-argument
-    return model_service.lambda_handler(event)
+    try:
+        return model_service.lambda_handler(event)
+    except Exception as exc:
+        exception_type, exception_value, exception_traceback = sys.exc_info()
+        traceback_string = traceback.format_exception(
+            exception_type, exception_value, exception_traceback
+        )
+        err_msg = json.dumps(
+            {
+                "errorType": exception_type.__name__,
+                "errorMessage": str(exception_value),
+                "stackTrace": traceback_string,
+            }
+        )
+        logger.error(err_msg)
