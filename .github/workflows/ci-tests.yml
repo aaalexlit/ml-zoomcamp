@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.9
+          python-version: 3.9.16
       - name: Install dependencies
         working-directory: ./best_practices/code
         run: pip install pipenv && pipenv install --dev
