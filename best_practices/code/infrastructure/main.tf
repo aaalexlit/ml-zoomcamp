@@ -25,8 +25,8 @@ locals {
 module "producer_kinesis_stream" {
   source           = "./modules/kinesis"
   stream_name      = "${var.producer_kinesis_stream_name}-${var.project_id}"
-  retention_period = 48
-  shard_count      = 2
+  retention_period = 24
+  shard_count      = 1
   tags             = var.project_id
 }
 
@@ -34,8 +34,8 @@ module "producer_kinesis_stream" {
 module "consumer_kinesis_stream" {
   source           = "./modules/kinesis"
   stream_name      = "${var.consumer_kinesis_stream_name}-${var.project_id}"
-  retention_period = 48
-  shard_count      = 2
+  retention_period = 24
+  shard_count      = 1
   tags             = var.project_id
 }
 
