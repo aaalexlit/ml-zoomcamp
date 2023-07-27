@@ -20,7 +20,7 @@ aws --endpoint-url=http://localhost:4566 \
     --stream-name ${PREDICTIONS_STREAM_NAME} \
     --shard-count 1
 
-cd "$(dirname "$0")"
+cd integration-test
 pipenv run python test_docker.py
 
 ERROR_CODE=$?
@@ -33,7 +33,7 @@ if [ ${ERROR_CODE} != 0 ]; then
     exit ${ERROR_CODE}
 fi
 
-cd "$(dirname "$0")"
+cd integration-test
 pipenv run python test_kinesis.py
 
 ERROR_CODE=$?
