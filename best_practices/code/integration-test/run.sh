@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-# cd to the directory where the script is
-cd "$(dirname "$0")"
+# cd to the directory where the script is if it's not a github action execution
+if [[ -z "${GITHUB_ACTIONS}" ]]; then
+  cd "$(dirname "$0")"
+fi"
 
 # give a unique tag to the docker image
 LOCAL_TAG=$(date +"%Y-%m-%d-%H-%M")
