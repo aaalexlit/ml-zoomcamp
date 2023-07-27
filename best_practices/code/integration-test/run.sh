@@ -20,29 +20,23 @@ aws --endpoint-url=http://localhost:4566 \
     --stream-name ${PREDICTIONS_STREAM_NAME} \
     --shard-count 1
 
-cd integration-test
-pipenv run python test_docker.py
+pipenv run python integration-test/test_docker.py
 
 ERROR_CODE=$?
 
-cd ..
-
 if [ ${ERROR_CODE} != 0 ]; then
-    docker-compose logs
-    docker-compose down
+    docker compose logs
+    docker compose down
     exit ${ERROR_CODE}
 fi
 
-cd integration-test
-pipenv run python test_kinesis.py
+pipenv run python integration-test/test_kinesis.py
 
 ERROR_CODE=$?
 
-cd ..
-
 if [ ${ERROR_CODE} != 0 ]; then
-    docker-compose logs
-    docker-compose down
+    docker compose logs
+    docker compose down
     exit ${ERROR_CODE}
 fi
 

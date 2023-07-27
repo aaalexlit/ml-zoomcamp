@@ -11,6 +11,7 @@ services:
       # needed for localstack to work with Docker compose in CI/CD environment
       - AWS_ACCESS_KEY_ID=abc
       - AWS_SECRET_ACCESS_KEY=xyz
+      - AWS_DEFAULT_REGION=us-west-2
     volumes:
       - ./integration-test/model:/app/model
       - ~/.aws:/root/.aws
