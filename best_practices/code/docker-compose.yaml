@@ -8,6 +8,9 @@ services:
       - RUN_ID=a4b217a84e3a44ad870271b75331eb6c
       - MODEL_LOCATION=/app/model/model.pkl
       - KINESIS_ENDPOINT_URL=http://kinesis:4566/
+      # needed for localstack to work with Docker compose in CI/CD environment
+      - AWS_ACCESS_KEY_ID=abc
+      - AWS_SECRET_ACCESS_KEY=xyz
     volumes:
       - ./integration-test/model:/app/model
       - ~/.aws:/root/.aws
