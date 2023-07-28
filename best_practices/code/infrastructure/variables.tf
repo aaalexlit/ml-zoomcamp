@@ -8,12 +8,12 @@ variable "project_id" {
 }
   
 variable "producer_kinesis_stream_name" {
-  description = "Kinesis producer stream name"
+  description = "Kinesis stream name for predictions"
 }
   
 
 variable "consumer_kinesis_stream_name" {
-  description = "Kinesis consumer stream name"
+  description = "Kinesis stream name for start ride events"
 }
 
 variable "model_bucket_name" {

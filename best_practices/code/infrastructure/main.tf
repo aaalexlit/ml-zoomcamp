@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.aws_region
+  region = var.aws_region
 }
 
 data "aws_caller_identity" "current" {}
@@ -53,12 +53,29 @@ module "ecr_image" {
 }
 
 module "lambda_function" {
-  source = "./modules/lambda"
-  image_uri = module.ecr_image.image_uri
+  source               = "./modules/lambda"
+  image_uri            = module.ecr_image.image_uri
   lambda_function_name = "${var.lambda_function_name}_${var.project_id}"
-  model_bucket = module.s3_bucket.name
-  output_stream_name = "${var.consumer_kinesis_stream_name}-${var.project_id}"
-  output_stream_arn = module.consumer_kinesis_stream.stream_arn
-  source_stream_name = "${var.producer_kinesis_stream_name}-${var.project_id}"
-  source_stream_arn = module.producer_kinesis_stream.stream_arn
+  model_bucket         = module.s3_bucket.name
+  output_stream_name   = "${var.consumer_kinesis_stream_name}-${var.project_id}"
+  output_stream_arn    = module.consumer_kinesis_stream.stream_arn
+  source_stream_name   = "${var.producer_kinesis_stream_name}-${var.project_id}"
+  source_stream_arn    = module.producer_kinesis_stream.stream_arn
+}
+
+# For CI/CD
+output "lambda_function" {
+  value = "${var.lambda_function_name}_${var.project_id}"
+}
+
+output "model_bucket" {
+  value = module.s3_bucket.name
+}
+
+output "predictions_stream_name" {
+  value = "${var.producer_kinesis_stream_name}-${var.project_id}"
+}
+
+output "ecr_repo" {
+  value = "${var.ecr_repo_name}_${var.project_id}"
 }
