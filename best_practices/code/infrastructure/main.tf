@@ -73,7 +73,7 @@ output "model_bucket" {
 }
 
 output "predictions_stream_name" {
-  value = "${var.producer_kinesis_stream_name}-${var.project_id}"
+  value = "${var.consumer_kinesis_stream_name}-${var.project_id}"
 }
 
 output "ecr_repo" {
