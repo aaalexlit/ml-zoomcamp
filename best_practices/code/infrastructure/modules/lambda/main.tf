@@ -2,9 +2,8 @@ resource "aws_lambda_function" "kinesis_lambda" {
   function_name = var.lambda_function_name
   # This can also be any base image to bootstrap the lambda config, unrelated to your Inference service on ECR
   # which would be anyway updated regularly via a CI/CD pipeline
-  image_uri = var.image_uri   # required-argument
-  package_type = "Image"
-  architectures = [ "arm64" ]
+  image_uri     = var.image_uri # required-argument
+  package_type  = "Image"
   role          = aws_iam_role.iam_lambda.arn
   tracing_config {
     mode = "Active"
@@ -13,10 +12,10 @@ resource "aws_lambda_function" "kinesis_lambda" {
   environment {
     variables = {
       PREDICTIONS_STREAM_NAME = var.output_stream_name
-      MODEL_BUCKET = var.model_bucket
+      MODEL_BUCKET            = var.model_bucket
     }
   }
-  timeout = 180
+  timeout     = 180
   memory_size = 512
 }
 
