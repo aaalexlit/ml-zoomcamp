@@ -1,5 +1,6 @@
 services:
   lambda:
+    platform: linux/amd64
     build:
       context: .
     image: ${LOCAL_IMAGE_NAME}
