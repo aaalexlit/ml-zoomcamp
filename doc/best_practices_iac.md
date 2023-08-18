@@ -38,7 +38,7 @@ In practice, the Image build-and-push step is handled by CI/CD pipeline and not 
 terraform apply -var-file="vars/stg.tfvars"
 ```
 
-2. copy the mode to the newly created s3 bucket by running [deploy-manual.sh](../best_practices/code/scripts/deploy-manual.sh)
+2. copy the model to the newly created s3 bucket by running [deploy-manual.sh](../best_practices/code/scripts/deploy-manual.sh)
 ```shell 
 ./deploy-manual.sh
 ```
