@@ -54,7 +54,7 @@
                 "sha256:539cc1d13202e33ca466e88b2807e29f4c13049d6d87031a3c110744495cb082",
                 "sha256:92d6037539857d8206b8f6ae472e8b77db8058fec5937a1ef3f54304089edbb9"
             ],
-            "index": "pypi",
+            "markers": "python_version >= '3.6'",
             "version": "==2023.7.22"
         },
         "charset-normalizer": {
@@ -655,11 +655,11 @@
         },
         "mlflow": {
             "hashes": [
-                "sha256:355bf5c0214f9f137f0b3d78f2f0a7f284eebbb23a027ad3e686eb1b84c1bbe9",
-                "sha256:6598f78f7ece59a9480573af57b09708a3283ece88f196e5d172c2040cec323f"
+                "sha256:3fc90da77be154f13ad306d94efc6ac77d504107f9085e1262c8c3e259521e79",
+                "sha256:fd569232e65d69c0cb7006847b1a1bd80831bf0e19378052a44ee5c0ae349182"
             ],
             "index": "pypi",
-            "version": "==2.4.1"
+            "version": "==2.6.0"
         },
         "numpy": {
             "hashes": [
